@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1b5e20">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    
+    <title>KemetChem Pro</title>
+    
+    <!-- Inline Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiS2VtZXRDaGVtIFBybyIsInNob3J0X25hbWUiOiJLZW1ldENoZW0iLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzFiNWUyMCIsInRoZW1lX2NvbG9yIjoiIzFiNWUyMCJ9">
+    
+    <!-- Inline Icon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231b5e20' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='65' font-size='50' text-anchor='middle'%3E🌾%3C/text%3E%3C/svg%3E">
+
+    <!-- ALL CSS INLINE - No external files -->
+    <style>
+        /* CSS Reset & Base */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        :root {
+            --primary: #1b5e20;
+            --primary-light: #2e7d32;
+            --primary-dark: #0d3b10;
+            --secondary: #f39c12;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --info: #3498db;
+            --warning: #f1c40f;
+            --dark: #1a1a1a;
+            --light: #f1f8e9;
+            --white: #ffffff;
+            --gray: #95a5a6;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            position: fixed;
+            width: 100%;
+        }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-icon {
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .loader-text {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .loader-sub {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .error-box {
+            background: var(--danger);
+            color: white;
+            padding: 16px 24px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .error-box.show {
+            display: block;
+        }
+
+        /* Login Screen */
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #loginScreen.hidden {
+            display: none;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+            color: white;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Inputs */
+        .input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius);
+            font-size: 15px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23666' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            padding-left: 40px;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #2ecc71 100%);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Company Selection */
+        .company-list {
+            margin-bottom: 16px;
+        }
+
+        .company-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .company-item.selected {
+            border-color: var(--primary);
+            background: rgba(27, 94, 32, 0.05);
+        }
+
+        .company-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .company-hint {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Header */
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: calc(60px + var(--safe-top));
+            padding-top: var(--safe-top);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 16px;
+            padding-right: 16px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        #header.hidden {
+            display: none;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 11px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        /* Navigation Drawer */
+        #navDrawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 85%;
+            max-width: 300px;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+        }
+
+        #navDrawer.open {
+            transform: translateX(0);
+        }
+
+        #navOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        #navOverlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: calc(20px + var(--safe-top)) 20px 20px;
+        }
+
+        .nav-logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .nav-user {
+            background: rgba(255,255,255,0.15);
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .nav-role {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .nav-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .nav-region {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .nav-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .nav-stat {
+            background: rgba(255,255,255,0.15);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .nav-stat-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .nav-stat-label {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            padding: 12px 0;
+            overflow-y: auto;
+            height: calc(100% - 200px);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-right: 3px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(27, 94, 32, 0.05);
+            border-right-color: var(--primary);
+        }
+
+        .nav-item-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .nav-item-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item-sub {
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* Main Content */
+        #main {
+            margin-top: calc(60px + var(--safe-top));
+            height: calc(100% - 60px - var(--safe-top));
+            overflow-y: auto;
+            padding: 12px;
+            display: none;
+        }
+
+        #main.show {
+            display: block;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 6px 0;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Buttons Row */
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Lists */
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .list-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 14px;
+            box-shadow: var(--shadow);
+            border-right: 3px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .list-item:active {
+            transform: scale(0.98);
+        }
+
+        .list-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .list-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-danger {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-success {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+
+        .list-item-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        /* Search */
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 3000;
+            display: none;
+            align-items: flex-end;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-height: 85vh;
+            border-radius: 20px 20px 0 0;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 6px;
+        }
+
+        /* Rating Stars */
+        .stars {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+
+        .star {
+            font-size: 32px;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: all 0.2s;
+        }
+
+        .star.active {
+            opacity: 1;
+        }
+
+        /* Payment Methods */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        .payment-option {
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(27, 94, 32, 0.05);
+        }
+
+        .payment-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .payment-name {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Toast */
+        #toastContainer {
+            position: fixed;
+            bottom: calc(20px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 90%;
+            max-width: 350px;
+        }
+
+        .toast {
+            background: #333;
+            color: white;
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--secondary); }
+
+        /* Sync Button */
+        #syncBtn {
+            position: fixed;
+            bottom: calc(20px + var(--safe-bottom));
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 1000;
+            border: none;
+        }
+
+        #syncBtn.spinning {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Connection Status */
+        #connStatus {
+            position: fixed;
+            top: calc(60px + var(--safe-top));
+            left: 0;
+            right: 0;
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+            z-index: 999;
+        }
+
+        #connStatus.show {
+            transform: translateY(0);
+        }
+
+        #connStatus.online { background: var(--success); }
+        #connStatus.offline { background: var(--danger); }
+
+        /* Utility */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-3 { margin-bottom: 12px; }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="loader-icon">🌾</div>
+        <div class="loader-text">KemetChem Pro</div>
+        <div class="loader-sub" id="loaderStatus">جاري التحميل...</div>
+        <div class="error-box" id="errorBox">
+            <div id="errorText">حدث خطأ</div>
+            <button class="btn btn-success" onclick="location.reload()" style="margin-top: 10px;">إعادة المحاولة</button>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">🌾</div>
+            <div class="login-title">KemetChem Pro</div>
+            <div class="login-subtitle">نظام المندوبين الاحترافي</div>
+
+            <!-- Company Selection -->
+            <div class="company-list" id="companyList"></div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('rep')">👤 مندوب</button>
+                <button class="tab" onclick="switchTab('manager')">👔 مدير</button>
+                <button class="tab" onclick="switchTab('admin')">⚙️ أدمن</button>
+            </div>
+
+            <!-- Rep Forms -->
+            <div id="repStep1">
+                <input type="tel" class="input" id="phoneInput" placeholder="رقم الهاتف" maxlength="11">
+                <button class="btn btn-primary" onclick="checkPhone()">التالي</button>
+            </div>
+
+            <div id="repStep2" class="hidden">
+                <div style="background: #f5f5f5; padding: 12px; border-radius: 10px; margin-bottom: 12px;">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 8px;">الهاتف: <span id="displayPhone"></span></div>
+                    <input type="text" class="input" id="nameInput" placeholder="الاسم الكامل">
+                    <input type="password" class="input" id="passInput" placeholder="كلمة المرور">
+                    <select class="input select" id="regionInput">
+                        <option value="">اختر المنطقة</option>
+                        <option value="القليوبية">القليوبية</option>
+                        <option value="الشرقية">الشرقية</option>
+                        <option value="الغربية">الغربية</option>
+                        <option value="الدقهلية">الدقهلية</option>
+                        <option value="كفر الشيخ">كفر الشيخ</option>
+                        <option value="البحيرة">البحيرة</option>
+                        <option value="المنوفية">المنوفية</option>
+                        <option value="الجيزة">الجيزة</option>
+                        <option value="الفيوم">الفيوم</option>
+                        <option value="بني سويف">بني سويف</option>
+                    </select>
+                    <input type="text" class="input" id="centerInput" placeholder="المركز">
+                    <input type="text" class="input" id="villageInput" placeholder="القرية/الحي">
+                </div>
+                <button class="btn btn-primary" onclick="register()">تسجيل</button>
+            </div>
+
+            <div id="repLogin" class="hidden">
+                <input type="tel" class="input" id="loginPhone" placeholder="رقم الهاتف">
+                <input type="password" class="input" id="loginPass" placeholder="كلمة المرور">
+                <button class="btn btn-primary" onclick="login('rep')">دخول</button>
+            </div>
+
+            <!-- Manager Login -->
+            <div id="managerLogin" class="hidden">
+                <input type="email" class="input" placeholder="البريد الإلكتروني">
+                <input type="password" class="input" placeholder="كلمة المرور">
+                <button class="btn btn-primary" onclick="login('manager')" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);">دخول المدير</button>
+            </div>
+
+            <!-- Admin Login -->
+            <div id="adminLogin" class="hidden">
+                <input type="password" class="input" placeholder="كلمة مرور الأدمن">
+                <button class="btn btn-primary" onclick="login('admin')" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">دخول الأدمن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="hidden">
+        <button class="header-btn" onclick="toggleNav()">☰</button>
+        <div class="header-title">
+            <h1 id="headerTitle">KemetChem</h1>
+            <p id="headerSubtitle">نظام المندوبين</p>
+        </div>
+        <button class="header-btn" onclick="goHome()">🏠</button>
+    </header>
+
+    <!-- Navigation -->
+    <div id="navOverlay" onclick="toggleNav()"></div>
+    <nav id="navDrawer">
+        <div class="nav-header">
+            <div class="nav-logo">🌾</div>
+            <div style="font-size: 18px; font-weight: bold;">KemetChem Pro</div>
+            <div style="font-size: 12px; opacity: 0.9;" id="navCompany">شركتك</div>
+            
+            <div class="nav-user" style="margin-top: 12px;">
+                <div class="nav-role" id="navRole">مندوب</div>
+                <div class="nav-name" id="navName">اسم المستخدم</div>
+                <div class="nav-region" id="navRegion">المنطقة</div>
+            </div>
+
+            <div class="nav-stats">
+                <div class="nav-stat">
+                    <div class="nav-stat-value" id="statCustomers">0</div>
+                    <div class="nav-stat-label">عميل</div>
+                </div>
+                <div class="nav-stat">
+                    <div class="nav-stat-value" id="statSales">0</div>
+                    <div class="nav-stat-label">مبيعات اليوم</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="navigate('home')">
+                <div class="nav-item-icon">📊</div>
+                <div>
+                    <div class="nav-item-text">الرئيسية</div>
+                    <div class="nav-item-sub">لوحة التحكم</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="navigate('customers')">
+                <div class="nav-item-icon">👥</div>
+                <div>
+                    <div class="nav-item-text">العملاء</div>
+                    <div class="nav-item-sub">إدارة العملاء</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="navigate('invoices')">
+                <div class="nav-item-icon">🧾</div>
+                <div>
+                    <div class="nav-item-text">الفواتير</div>
+                    <div class="nav-item-sub">المبيعات</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="navigate('payments')">
+                <div class="nav-item-icon">💵</div>
+                <div>
+                    <div class="nav-item-text">التحصيل</div>
+                    <div class="nav-item-sub">المدفوعات</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="navigate('visits')">
+                <div class="nav-item-icon">📍</div>
+                <div>
+                    <div class="nav-item-text">الزيارات</div>
+                    <div class="nav-item-sub">تتبع الزيارات</div>
+                </div>
+            </div>
+
+            <div style="height: 1px; background: #e0e0e0; margin: 8px 16px;"></div>
+
+            <div class="nav-item manager-only hidden" onclick="navigate('suggested')">
+                <div class="nav-item-icon" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">💡</div>
+                <div class="nav-item-text">عملاء مقترحين</div>
+            </div>
+
+            <div style="height: 1px; background: #e0e0e0; margin: 8px 16px;"></div>
+
+            <div class="nav-item" onclick="logout()">
+                <div class="nav-item-icon" style="background: #666;">🚪</div>
+                <div class="nav-item-text">تسجيل الخروج</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main">
+        <!-- Home Section -->
+        <section class="section active" id="home">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">مبيعات اليوم</div>
+                    <div class="kpi-value" id="kpiSales">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">الزيارات</div>
+                    <div class="kpi-value" id="kpiVisits">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">التحصيل</div>
+                    <div class="kpi-value" id="kpiPayments">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">الهدف</div>
+                    <div class="kpi-value" id="kpiTarget">0%</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">إجراءات سريعة</div>
+                </div>
+                <button class="btn btn-primary mb-2" onclick="openModal('invoiceModal')">
+                    🧾 فاتورة جديدة
+                </button>
+                <div class="btn-row">
+                    <button class="btn btn-success" onclick="openModal('paymentModal')">💵 تحصيل</button>
+                    <button class="btn btn-warning" onclick="openModal('visitModal')">📍 زيارة</button>
+                </div>
+            </div>
+
+            <div class="card hidden" id="suggestedCard" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 2px solid var(--secondary);">
+                <div style="font-size: 13px; color: #666; margin-bottom: 8px;">💡 عملاء مقترحين</div>
+                <div style="font-size: 14px; margin-bottom: 12px;">
+                    هناك <strong id="suggestedCount">0</strong> عميل متاح
+                </div>
+                <button class="btn btn-warning" onclick="navigate('suggested')">عرض العملاء</button>
+            </div>
+        </section>
+
+        <!-- Customers Section -->
+        <section class="section" id="customers">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">👥</div>
+                    <div class="card-title">العملاء</div>
+                </div>
+                <div class="btn-row mb-3">
+                    <button class="btn btn-success" onclick="openModal('customerModal')">➕ عميل</button>
+                    <button class="btn btn-primary" onclick="importExcel()">📥 استيراد</button>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="ابحث بالاسم أو الهاتف..." oninput="doSearch(this.value)">
+            </div>
+
+            <div class="list" id="customerList"></div>
+        </section>
+
+        <!-- Other Sections -->
+        <section class="section" id="invoices">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🧾</div>
+                    <div class="card-title">الفواتير</div>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('invoiceModal')">فاتورة جديدة</button>
+            </div>
+            <div class="list" id="invoiceList"></div>
+        </section>
+
+        <section class="section" id="payments">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💵</div>
+                    <div class="card-title">التحصيل</div>
+                </div>
+                <button class="btn btn-success" onclick="openModal('paymentModal')">تحصيل جديد</button>
+            </div>
+            <div class="list" id="paymentList"></div>
+        </section>
+
+        <section class="section" id="visits">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📍</div>
+                    <div class="card-title">الزيارات</div>
+                </div>
+                <button class="btn btn-warning" onclick="openModal('visitModal')">زيارة جديدة</button>
+            </div>
+            <div class="list" id="visitList"></div>
+        </section>
+
+        <section class="section" id="suggested">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">💡</div>
+                    <div class="card-title">عملاء مقترحين</div>
+                </div>
+            </div>
+            <div class="list" id="suggestedList"></div>
+        </section>
+    </main>
+
+    <!-- Connection Status -->
+    <div id="connStatus"></div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Sync Button -->
+    <button id="syncBtn" onclick="sync()" class="hidden">🔄</button>
+
+    <!-- Modals -->
+    <!-- Customer Modal -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">➕ عميل جديد</div>
+                <button class="modal-close" onclick="closeModal('customerModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">اسم العميل</label>
+                    <input type="text" class="input" id="custName" placeholder="الاسم الكامل">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <input type="tel" class="input" id="custPhone" placeholder="01xxxxxxxxx" maxlength="11">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المحافظة</label>
+                    <select class="input select" id="custGov">
+                        <option value="">اختر المحافظة</option>
+                        <option value="القليوبية">القليوبية</option>
+                        <option value="الشرقية">الشرقية</option>
+                        <option value="الغربية">الغربية</option>
+                        <option value="الدقهلية">الدقهلية</option>
+                        <option value="كفر الشيخ">كفر الشيخ</option>
+                        <option value="البحيرة">البحيرة</option>
+                        <option value="المنوفية">المنوفية</option>
+                        <option value="الجيزة">الجيزة</option>
+                        <option value="الفيوم">الفيوم</option>
+                        <option value="بني سويف">بني سويف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المركز</label>
+                    <input type="text" class="input" id="custCenter" placeholder="المركز">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">القرية</label>
+                    <input type="text" class="input" id="custVillage" placeholder="القرية">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">العنوان</label>
+                    <input type="text" class="input" id="custAddress" placeholder="العنوان التفصيلي">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المحصول</label>
+                    <input type="text" class="input" id="custCrop" placeholder="نوع المحصول">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المساحة (فدان)</label>
+                    <input type="number" class="input" id="custArea" placeholder="عدد الأفدنة">
+                </div>
+
+                <!-- Rating -->
+                <div style="background: #f5f5f5; padding: 16px; border-radius: 10px; margin: 16px 0;">
+                    <div class="text-center mb-2" style="font-weight: 600;">تقييم العميل</div>
+                    
+                    <div class="stars" id="starContainer">
+                        <span class="star" onclick="setStar(1)">⭐</span>
+                        <span class="star" onclick="setStar(2)">⭐</span>
+                        <span class="star" onclick="setStar(3)">⭐</span>
+                        <span class="star" onclick="setStar(4)">⭐</span>
+                        <span class="star" onclick="setStar(5)">⭐</span>
+                    </div>
+                    <input type="hidden" id="custRating" value="0">
+
+                    <div class="form-group">
+                        <label class="form-label">طريقة الدفع</label>
+                        <div class="payment-grid">
+                            <div class="payment-option" onclick="setPayment('cash')">
+                                <div class="payment-icon">💵</div>
+                                <div class="payment-name">كاش</div>
+                            </div>
+                            <div class="payment-option" onclick="setPayment('credit')">
+                                <div class="payment-icon">📅</div>
+                                <div class="payment-name">آجل</div>
+                            </div>
+                            <div class="payment-option" onclick="setPayment('checks')">
+                                <div class="payment-icon">📄</div>
+                                <div class="payment-name">شيكات</div>
+                            </div>
+                            <div class="payment-option" onclick="setPayment('mixed')">
+                                <div class="payment-icon">🔄</div>
+                                <div class="payment-name">مختلط</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="custPayment" value="">
+                    </div>
+
+                    <div class="form-group hidden" id="creditGroup">
+                        <label class="form-label">مدة السداد (يوم)</label>
+                        <input type="number" class="input" id="custCreditDays" placeholder="عدد الأيام">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ملاحظات</label>
+                        <textarea class="input" id="custNotes" rows="2" placeholder="ملاحظات خاصة..."></textarea>
+                    </div>
+                </div>
+
+                <button class="btn btn-success" onclick="saveCustomer()">حفظ العميل</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visit Modal -->
+    <div class="modal" id="visitModal">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="modal-title">📍 زيارة جديدة</div>
+                <button class="modal-close" onclick="closeModal('visitModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">العميل</label>
+                    <div class="search-box" style="margin-bottom: 0;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="visitSearch" placeholder="ابحث عن العميل..." oninput="searchVisit(this.value)">
+                    </div>
+                    <input type="hidden" id="visitCustId">
+                </div>
+
+                <div style="background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%); padding: 20px; border-radius: 12px; color: white; margin: 16px 0;">
+                    <div style="font-weight: 600; margin-bottom: 12px;">📍 تحديد الموقع</div>
+                    <button class="btn" id="gpsBtn" onclick="getGPS()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none;">
+                        <span id="gpsText">التحقق من الموقع</span>
+                    </button>
+                    <div id="gpsResult" style="margin-top: 12px; padding: 12px; background: rgba(255,255,255,0.2); border-radius: 8px; display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ملاحظات</label>
+                    <textarea class="input" id="visitNotes" rows="3"></textarea>
+                </div>
+
+                <button class="btn btn-success" id="saveVisitBtn" onclick="saveVisit()" disabled>حفظ الزيارة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice & Payment Modals (Simplified) -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🧾 فاتورة جديدة</div>
+                <button class="modal-close" onclick="closeModal('invoiceModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center" style="color: #666; padding: 40px;">قيد التطوير...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                <div class="modal-title">💵 تحصيل</div>
+                <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center" style="color: #666; padding: 40px;">قيد التطوير...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALL JAVASCRIPT INLINE -->
+    <script>
+        // ==================== CONFIG ====================
+        const APP_VERSION = '1.0.0';
+        const STORAGE_KEY = 'kemetchemp_' + APP_VERSION;
+        
+        // ==================== STATE ====================
+        let currentUser = null;
+        let currentCompany = null;
+        let currentRole = null;
+        let appData = {
+            customers: [],
+            invoices: [],
+            payments: [],
+            visits: [],
+            suggested: [],
+            reps: []
+        };
+        let currentGPS = null;
+
+        // ==================== INIT ====================
+        console.log('🌾 KemetChem Pro v' + APP_VERSION);
+        console.log('URL:', window.location.href);
+        console.log('User Agent:', navigator.userAgent.substring(0, 50));
+
+        // Check for errors in loading
+        window.addEventListener('error', function(e) {
+            console.error('❌ Error:', e.message, 'at', e.filename, ':', e.lineno);
+            showError('خطأ في تحميل: ' + e.message);
+        });
+
+        // Initialize when DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        function init() {
+            console.log('✅ DOM Ready');
+            
+            // Hide loader
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 300);
+
+            // Load saved data
+            loadData();
+            
+            // Setup companies
+            renderCompanies();
+            
+            // Check online status
+            updateConnectionStatus();
+            window.addEventListener('online', () => updateConnectionStatus());
+            window.addEventListener('offline', () => updateConnectionStatus());
+        }
+
+        function showError(msg) {
+            console.error(msg);
+            document.getElementById('loaderStatus').textContent = '❌ خطأ في التحميل';
+            document.getElementById('errorText').textContent = msg;
+            document.getElementById('errorBox').classList.add('show');
+        }
+
+        // ==================== DATA STORAGE ====================
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                console.log('💾 Data saved');
+            } catch (e) {
+                console.error('Save failed:', e);
+            }
+        }
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    appData = JSON.parse(saved);
+                    console.log('📂 Data loaded:', Object.keys(appData));
+                }
+            } catch (e) {
+                console.error('Load failed:', e);
+            }
+        }
+
+        // ==================== UI FUNCTIONS ====================
+        function renderCompanies() {
+            const list = document.getElementById('companyList');
+            const companies = [
+                { id: 1, name: 'الشركة الزراعية الأولى', icon: '🌾' },
+                { id: 2, name: 'سماد النيل', icon: '🌱' },
+                { id: 3, name: 'كيماويات مصر', icon: '⚗️' }
+            ];
+
+            list.innerHTML = companies.map(c => `
+                <div class="company-item" onclick="selectCompany(${c.id}, '${c.name}', '${c.icon}')" id="comp-${c.id}">
+                    <div class="company-icon">${c.icon}</div>
+                    <div class="company-info">
+                        <div class="company-name">${c.name}</div>
+                        <div class="company-hint">انقر للاختيار</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectCompany(id, name, icon) {
+            currentCompany = { id, name, icon };
+            document.querySelectorAll('.company-item').forEach(el => el.classList.remove('selected'));
+            document.getElementById('comp-' + id).classList.add('selected');
+            console.log('🏢 Company:', name);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Hide all forms
+            document.getElementById('repStep1').classList.add('hidden');
+            document.getElementById('repStep2').classList.add('hidden');
+            document.getElementById('repLogin').classList.add('hidden');
+            document.getElementById('managerLogin').classList.add('hidden');
+            document.getElementById('adminLogin').classList.add('hidden');
+
+            // Show selected
+            if (tab === 'rep') document.getElementById('repStep1').classList.remove('hidden');
+            else if (tab === 'manager') document.getElementById('managerLogin').classList.remove('hidden');
+            else document.getElementById('adminLogin').classList.remove('hidden');
+        }
+
+        function checkPhone() {
+            const phone = document.getElementById('phoneInput').value.trim();
+            if (!phone || phone.length < 10) {
+                toast('أدخل رقم هاتف صحيح', 'error');
+                return;
+            }
+
+            // Check if exists
+            const exists = appData.reps.find(r => r.phone === phone && r.companyId === currentCompany?.id);
+            
+            if (exists) {
+                document.getElementById('repStep1').classList.add('hidden');
+                document.getElementById('repLogin').classList.remove('hidden');
+                document.getElementById('loginPhone').value = phone;
+            } else {
+                if (!currentCompany) {
+                    toast('اختر الشركة أولاً', 'error');
+                    return;
+                }
+                document.getElementById('repStep1').classList.add('hidden');
+                document.getElementById('repStep2').classList.remove('hidden');
+                document.getElementById('displayPhone').textContent = phone;
+            }
+        }
+
+        function register() {
+            const phone = document.getElementById('phoneInput').value;
+            const name = document.getElementById('nameInput').value.trim();
+            const pass = document.getElementById('passInput').value;
+            const region = document.getElementById('regionInput').value;
+            const center = document.getElementById('centerInput').value.trim();
+
+            if (!name || !pass || !region || !center) {
+                toast('أكمل جميع البيانات', 'error');
+                return;
+            }
+
+            const newRep = {
+                id: 'rep_' + Date.now(),
+                phone,
+                name,
+                password: pass,
+                companyId: currentCompany.id,
+                region,
+                center: document.getElementById('villageInput').value || center,
+                role: 'rep',
+                createdAt: new Date().toISOString()
+            };
+
+            appData.reps.push(newRep);
+            saveData();
+
+            currentUser = newRep;
+            currentRole = 'rep';
+            startApp();
+            toast('تم التسجيل بنجاح!', 'success');
+        }
+
+        function login(role) {
+            if (!currentCompany) {
+                toast('اختر الشركة أولاً', 'error');
+                return;
+            }
+
+            currentRole = role;
+
+            if (role === 'rep') {
+                const phone = document.getElementById('loginPhone').value;
+                const pass = document.getElementById('loginPass').value;
+                
+                const rep = appData.reps.find(r => 
+                    r.phone === phone && 
+                    r.password === pass && 
+                    r.companyId === currentCompany.id
+                );
+
+                if (!rep) {
+                    toast('بيانات الدخول غير صحيحة', 'error');
+                    return;
+                }
+                currentUser = rep;
+            } else if (role === 'manager') {
+                currentUser = {
+                    id: 'mgr_' + currentCompany.id,
+                    name: 'مدير ' + currentCompany.name,
+                    companyId: currentCompany.id,
+                    role: 'manager',
+                    region: 'all'
+                };
+            } else {
+                currentUser = {
+                    id: 'admin_1',
+                    name: 'الأدمن',
+                    role: 'admin',
+                    companyId: currentCompany.id
+                };
+            }
+
+            startApp();
+        }
+
+        function startApp() {
+            console.log('🚀 Starting app for:', currentUser.name);
+
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('header').classList.remove('hidden');
+            document.getElementById('main').classList.add('show');
+            document.getElementById('syncBtn').classList.remove('hidden');
+
+            // Update UI
+            document.getElementById('headerTitle').textContent = currentCompany.icon + ' ' + currentCompany.name;
+            document.getElementById('headerSubtitle').textContent = 
+                currentRole === 'rep' ? 'مندوب مبيعات' : 
+                currentRole === 'manager' ? 'مدير فرع' : 'مدير النظام';
+            
+            document.getElementById('navCompany').textContent = currentCompany.name;
+            document.getElementById('navName').textContent = currentUser.name;
+            document.getElementById('navRole').textContent = 
+                currentRole === 'rep' ? 'مندوب مبيعات' : 
+                currentRole === 'manager' ? 'مدير فرع' : 'مدير النظام';
+            document.getElementById('navRegion').textContent = 
+                currentUser.region === 'all' ? 'جميع المناطق' : currentUser.region;
+
+            // Show manager items
+            if (currentRole === 'manager' || currentRole === 'admin') {
+                document.querySelectorAll('.manager-only').forEach(el => el.classList.remove('hidden'));
+            }
+
+            // Filter data
+            filterData();
+            
+            // Render
+            renderCustomers();
+            updateStats();
+        }
+
+        function filterData() {
+            if (currentRole === 'rep') {
+                appData.customers = appData.customers.filter(c => 
+                    c.companyId === currentCompany.id && 
+                    c.repId === currentUser.id
+                );
+            } else if (currentRole === 'manager') {
+                appData.customers = appData.customers.filter(c => 
+                    c.companyId === currentCompany.id
+                );
+            }
+        }
+
+        // ==================== NAVIGATION ====================
+        function toggleNav() {
+            document.getElementById('navDrawer').classList.toggle('open');
+            document.getElementById('navOverlay').classList.toggle('show');
+        }
+
+        function navigate(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            toggleNav();
+            
+            if (section === 'customers') renderCustomers();
+            if (section === 'suggested') renderSuggested();
+        }
+
+        function goHome() {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('home').classList.add('active');
+        }
+
+        // ==================== CUSTOMERS ====================
+        function renderCustomers() {
+            const list = document.getElementById('customerList');
+            const customers = appData.customers.filter(c => 
+                c.companyId === currentCompany?.id &&
+                (currentRole === 'manager' || c.repId === currentUser?.id)
+            );
+
+            if (customers.length === 0) {
+                list.innerHTML = '<div class="text-center" style="padding: 40px; color: #999;">لا يوجد عملاء. أضف عميلاً جديداً!</div>';
+                return;
+            }
+
+            list.innerHTML = customers.map(c => `
+                <div class="list-item" onclick="viewCustomer('${c.id}')">
+                    <div class="list-item-header">
+                        <div class="list-item-title">${c.name}</div>
+                        <div class="badge ${c.debt > 0 ? 'badge-danger' : 'badge-success'}">
+                            ${c.debt > 0 ? c.debt.toLocaleString() + ' ج' : '0'}
+                        </div>
+                    </div>
+                    <div class="list-item-meta">
+                        <span>📱 ${c.phone}</span>
+                        <span>📍 ${c.governorate || c.region}</span>
+                        ${c.rating ? `<span>⭐ ${c.rating}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('statCustomers').textContent = customers.length;
+        }
+
+        function doSearch(query) {
+            if (!query) {
+                renderCustomers();
+                return;
+            }
+
+            const filtered = appData.customers.filter(c => 
+                c.name.includes(query) || c.phone.includes(query)
+            );
+
+            const list = document.getElementById('customerList');
+            list.innerHTML = filtered.map(c => `
+                <div class="list-item" onclick="viewCustomer('${c.id}')">
+                    <div class="list-item-header">
+                        <div class="list-item-title">${c.name}</div>
+                        <div class="badge ${c.debt > 0 ? 'badge-danger' : 'badge-success'}">
+                            ${c.debt > 0 ? c.debt.toLocaleString() + ' ج' : '0'}
+                        </div>
+                    </div>
+                    <div class="list-item-meta">
+                        <span>📱 ${c.phone}</span>
+                        <span>📍 ${c.governorate || c.region}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== MODALS ====================
+        function openModal(id) {
+            document.getElementById(id).classList.add('show');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        // Customer Modal Functions
+        function setStar(n) {
+            document.getElementById('custRating').value = n;
+            document.querySelectorAll('.star').forEach((s, i) => {
+                s.classList.toggle('active', i < n);
+            });
+        }
+
+        function setPayment(method) {
+            document.getElementById('custPayment').value = method;
+            document.querySelectorAll('.payment-option').forEach(p => p.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            document.getElementById('creditGroup').classList.toggle('hidden', method !== 'credit' && method !== 'mixed');
+        }
+
+        function saveCustomer() {
+            const customer = {
+                id: 'cust_' + Date.now(),
+                name: document.getElementById('custName').value.trim(),
+                phone: document.getElementById('custPhone').value.trim(),
+                governorate: document.getElementById('custGov').value,
+                center: document.getElementById('custCenter').value.trim(),
+                village: document.getElementById('custVillage').value.trim(),
+                address: document.getElementById('custAddress').value.trim(),
+                crop: document.getElementById('custCrop').value.trim(),
+                area: parseFloat(document.getElementById('custArea').value) || 0,
+                region: currentUser.region,
+                companyId: currentCompany.id,
+                repId: currentUser.id,
+                rating: parseInt(document.getElementById('custRating').value) || 0,
+                paymentMethod: document.getElementById('custPayment').value,
+                creditDays: parseInt(document.getElementById('custCreditDays').value) || 0,
+                notes: document.getElementById('custNotes').value,
+                debt: 0,
+                createdAt: new Date().toISOString()
+            };
+
+            if (!customer.name || !customer.phone) {
+                toast('أكمل البيانات الأساسية', 'error');
+                return;
+            }
+
+            appData.customers.push(customer);
+            saveData();
+
+            closeModal('customerModal');
+            renderCustomers();
+            updateStats();
+            toast('تم حفظ العميل بنجاح!', 'success');
+        }
+
+        // Visit Modal Functions
+        function searchVisit(query) {
+            if (query.length < 2) return;
+            
+            const customer = appData.customers.find(c => 
+                c.name.includes(query) || c.phone.includes(query)
+            );
+            
+            if (customer) {
+                document.getElementById('visitCustId').value = customer.id;
+                document.getElementById('visitSearch').value = customer.name;
+            }
+        }
+
+        function getGPS() {
+            const btn = document.getElementById('gpsBtn');
+            const result = document.getElementById('gpsResult');
+            
+            btn.disabled = true;
+            document.getElementById('gpsText').textContent = 'جاري التحقق...';
+
+            if (!navigator.geolocation) {
+                result.innerHTML = '❌ GPS غير مدعوم';
+                result.style.display = 'block';
+                btn.disabled = false;
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    currentGPS = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude,
+                        accuracy: pos.coords.accuracy
+                    };
+
+                    result.innerHTML = `✅ تم التحديد<br>الدقة: ±${Math.round(currentGPS.accuracy)} متر`;
+                    result.style.display = 'block';
+                    
+                    btn.innerHTML = '✅ تم التحقق';
+                    btn.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+                    document.getElementById('saveVisitBtn').disabled = false;
+                },
+                (err) => {
+                    let msg = 'فشل التحديد';
+                    if (err.code === 1) msg = 'تم رفض الإذن';
+                    else if (err.code === 2) msg = 'الموقع غير متاح';
+                    else if (err.code === 3) msg = 'انتهى الوقت';
+                    
+                    result.innerHTML = '❌ ' + msg;
+                    result.style.display = 'block';
+                    btn.disabled = false;
+                    document.getElementById('gpsText').textContent = 'إعادة المحاولة';
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        }
+
+        function saveVisit() {
+            const custId = document.getElementById('visitCustId').value;
+            if (!custId) {
+                toast('اختر العميل أولاً', 'error');
+                return;
+            }
+
+            const visit = {
+                id: 'visit_' + Date.now(),
+                customerId: custId,
+                customerName: appData.customers.find(c => c.id === custId)?.name,
+                notes: document.getElementById('visitNotes').value,
+                gps: currentGPS ? `${currentGPS.lat},${currentGPS.lng}` : null,
+                accuracy: currentGPS?.accuracy,
+                companyId: currentCompany.id,
+                repId: currentUser.id,
+                region: currentUser.region,
+                date: new Date().toISOString().split('T')[0],
+                createdAt: new Date().toISOString()
+            };
+
+            // Update customer last visit
+            const customer = appData.customers.find(c => c.id === custId);
+            if (customer) customer.lastVisit = visit.date;
+
+            appData.visits.push(visit);
+            saveData();
+
+            closeModal('visitModal');
+            updateStats();
+            toast('تم حفظ الزيارة!', 'success');
+        }
+
+        // ==================== SUGGESTED CUSTOMERS ====================
+        function renderSuggested() {
+            const list = document.getElementById('suggestedList');
+            const suggested = appData.suggested.filter(s => 
+                s.region === currentUser.region && 
+                s.companyId === currentCompany.id &&
+                !s.purchased
+            );
+
+            if (suggested.length === 0) {
+                list.innerHTML = '<div class="text-center" style="padding: 40px; color: #999;">لا يوجد عملاء مقترحين حالياً</div>';
+                return;
+            }
+
+            list.innerHTML = suggested.map(s => `
+                <div class="list-item">
+                    <div class="list-item-header">
+                        <div class="list-item-title">${s.name}</div>
+                        <div class="badge badge-success">متاح</div>
+                    </div>
+                    <div class="list-item-meta">
+                        <span>📱 ${s.phone}</span>
+                        <span>📍 ${s.center}</span>
+                    </div>
+                    <div style="margin-top: 12px; padding: 12px; background: #f5f5f5; border-radius: 8px;">
+                        <div style="font-size: 13px;">السعر: <strong>${s.price} ج</strong></div>
+                    </div>
+                    <button class="btn btn-success" style="margin-top: 12px;" onclick="buyCustomer('${s.id}')">
+                        🛒 شراء العميل
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function buyCustomer(id) {
+            const suggested = appData.suggested.find(s => s.id === id);
+            if (!suggested) return;
+
+            const customer = {
+                id: 'cust_' + Date.now(),
+                name: suggested.name,
+                phone: suggested.phone,
+                governorate: suggested.region,
+                center: suggested.center,
+                village: suggested.village,
+                region: suggested.region,
+                companyId: currentCompany.id,
+                repId: currentUser.id,
+                rating: 0,
+                debt: 0,
+                source: 'purchased',
+                purchasePrice: suggested.price,
+                purchasedAt: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+
+            appData.customers.push(customer);
+            suggested.purchased = true;
+            suggested.purchasedBy = currentUser.id;
+            saveData();
+
+            renderSuggested();
+            renderCustomers();
+            updateStats();
+            toast('تم شراء العميل بنجاح!', 'success');
+        }
+
+        // ==================== UTILITIES ====================
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const visits = appData.visits.filter(v => v.date === today && v.repId === currentUser?.id).length;
+            const sales = appData.invoices
+                .filter(i => i.date === today && i.repId === currentUser?.id)
+                .reduce((sum, i) => sum + (i.total || 0), 0);
+
+            document.getElementById('kpiVisits').textContent = visits;
+            document.getElementById('kpiSales').textContent = sales.toLocaleString();
+            document.getElementById('statSales').textContent = (sales / 1000).toFixed(1) + 'k';
+            
+            // Check suggested
+            const suggested = appData.suggested.filter(s => 
+                s.region === currentUser?.region && 
+                !s.purchased
+            ).length;
+            
+            if (suggested > 0 && currentRole === 'rep') {
+                document.getElementById('suggestedCard').classList.remove('hidden');
+                document.getElementById('suggestedCount').textContent = suggested;
+            }
+        }
+
+        function updateConnectionStatus() {
+            const status = document.getElementById('connStatus');
+            if (navigator.onLine) {
+                status.textContent = '✓ متصل';
+                status.className = 'online show';
+                setTimeout(() => status.classList.remove('show'), 2000);
+            } else {
+                status.textContent = '✗ غير متصل';
+                status.className = 'offline show';
+            }
+        }
+
+        function sync() {
+            const btn = document.getElementById('syncBtn');
+            btn.classList.add('spinning');
+            toast('جاري المزامنة...', 'info');
+            
+            setTimeout(() => {
+                btn.classList.remove('spinning');
+                toast('تمت المزامنة!', 'success');
+            }, 1500);
+        }
+
+        function toast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.innerHTML = (type === 'success' ? '✓ ' : type === 'error' ? '✗ ' : '⚠ ') + message;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function logout() {
+            if (confirm('تسجيل الخروج؟')) {
+                location.reload();
+            }
+        }
+
+        function importExcel() {
+            toast('قيد التطوير...', 'info');
+        }
+
+        function viewCustomer(id) {
+            toast('تفاصيل العميل - قيد التطوير', 'info');
+        }
+
+        console.log('✅ All scripts loaded');
+    </script>
+</body>
+</html>
